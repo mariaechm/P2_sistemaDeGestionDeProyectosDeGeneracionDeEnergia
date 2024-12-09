@@ -1,0 +1,11 @@
+[{  "idProyecto":12,
+    "nombre":"Nueva Loja",
+    "montoInversion":"45.0000",
+    "tiempoDeVida":"5",
+    "fechaInicio":"01/02/2020",
+    "fechaFin":"01/02/2025",
+    "capacidadGeneracionPorDia":"33",
+    "montoTotal":"15.020",
+    "tipodeProyecto":"Hidroelectrica"}
+    
+]

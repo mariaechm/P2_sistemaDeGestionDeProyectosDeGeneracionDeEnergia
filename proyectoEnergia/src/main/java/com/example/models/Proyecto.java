@@ -3,43 +3,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.example.models;
-
 import com.example.models.enumerator.TipoProyecto;
 /**
  *
  * @author maria-chuico
  */
 public class Proyecto {
-    private Integer idProyecto; //identificador unico   
+    private Integer id; //identificador unico   
     private String nombre; //nombre del proyecto
     private Float montoInversion; //monto de inversion
-    private Integer tiempoDeVida;
+    private Integer tiempoDeVida; //tiempo de vida del proyecto
     private String fechaInicio; //fecha de inicio
     private String fechaFin; //fecha final de construcucion
-    private Float capacidadGeneracionPorDia; //capacidad de generacion en un dia
-    private Float montoTotal; //monto total de inversion
-    private TipoProyecto tipo; //solar, eolico, hidroelectrico, termoelectrico
+    private TipoProyecto tipo; //solar, eolico, hidroelectrico
 
-    //Constructor
-    public Proyecto(Integer idProyecto, String nombre, Float montoInversion, Integer tiempoDeVida, String fechaInicio, String fechaFin, Float capacidadGeneracionPorDia, Float montoTotal, TipoProyecto tipo) {
-        this.idProyecto = idProyecto;
-        this.nombre = nombre;
-        this.montoInversion = montoInversion;
-        this.tiempoDeVida = tiempoDeVida;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
-        this.capacidadGeneracionPorDia = capacidadGeneracionPorDia;
-        this.montoTotal = montoTotal;
-        this.tipo = tipo;
-    }  
-    
     //Getters y Setters
-    public Integer getIdProyecto() {
-        return this.idProyecto;
+    public Integer getId() {
+        return this.id;
     }
 
-    public void setIdProyecto(Integer idProyecto) {
-        this.idProyecto = idProyecto;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -82,32 +66,12 @@ public class Proyecto {
         this.fechaFin = fechaFin;
     }
 
-    public Float getCapacidadGeneracionPorDia() {
-        return this.capacidadGeneracionPorDia;
-    }
-
-    public void setCapacidadGeneracionPorDia(Float capacidadGeneracionPorDia) {
-        this.capacidadGeneracionPorDia = capacidadGeneracionPorDia;
-    }
-
-    public Float getMontoTotal() {
-        return this.montoTotal;
-    }
-
-    public void setMontoTotal(Float montoTotal) {
-        this.montoTotal = montoTotal;
-    }
-
     public TipoProyecto getTipo() {
         return this.tipo;
     }
 
     public void setTipo(TipoProyecto tipo) {
         this.tipo = tipo;
-    }
-
-    // Constructor por defecto
-    public Proyecto() {
     }
     
 }

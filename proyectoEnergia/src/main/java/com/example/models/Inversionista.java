@@ -3,36 +3,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.example.models;
-
-import java.io.Serializable;
 /**
  *
  * @author maria-chuico
  */
 
 public class Inversionista {
-    private Integer idInversionista; //identificador unico
+    private Integer id; //identificador unico
     private String nombre; //nombre del inversionista
     private String apellido; //apellido del inversionista
-    private String nacionalidad;
     private String identificacion; //cedula, pasaporte, RUC 
 
-    //Constructor
-    public Inversionista(Integer idInversionista, String nombre, String apellido, String nacionalidad, String identificacion) {
-        this.idInversionista = idInversionista;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.nacionalidad = nacionalidad;
-        this.identificacion = identificacion;
-    }
 
     //Getters y Setters
-    public Integer getIdInversionista() {
-        return this.idInversionista;
+    public Integer getId() {
+        return this.id;
     }
 
-    public void setIdInversionista(Integer idInversionista) {
-        this.idInversionista = idInversionista;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -51,14 +40,6 @@ public class Inversionista {
         this.apellido = apellido;
     }
 
-    public String getNacionalidad() {
-        return this.nacionalidad;
-    }
-
-    public void setNacionalidad(String nacionalidad) {
-        this.nacionalidad = nacionalidad;
-    }
-
     public String getIdentificacion() {
         return this.identificacion;
     }
@@ -67,11 +48,8 @@ public class Inversionista {
         this.identificacion = identificacion;
     }
     
-    public String toString(){
+    /* public String toString(){
         return apellido + " " + nombre;
-    }
-
-    // Constructor por defecto
-    public Inversionista() {
-    }
+    } */
 }
+

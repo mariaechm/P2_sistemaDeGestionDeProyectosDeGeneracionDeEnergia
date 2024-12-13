@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -21,6 +22,8 @@ import javax.ws.rs.core.Response.Status;
 
 import com.example.controller.tda.list.LinkedList;
 import com.example.models.Inversionista;
+import com.example.models.enumerator.TipoProyecto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -34,7 +37,7 @@ import com.example.controller.dao.services.InversionistaServices;
 @Path("/inversionista")
 public class InversionistaApi {
 
-    @Path("/listas")
+    @Path("/list")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRelacion() throws Exception {
@@ -52,10 +55,11 @@ public class InversionistaApi {
             map.put("data", lista.toArray());
         }
         
-        return Response.ok(map).build();
+         ObjectMapper om = new ObjectMapper();
+         return Response.ok(om.writeValueAsString(map)).build();
     }
 
-    @Path("/asociar")
+    @Path("/save")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response save(HashMap<String, String> map) throws Exception {
@@ -65,12 +69,13 @@ public class InversionistaApi {
             Inversionista inversionista = is.getInversionista();
             inversionista.setNombre(map.get("nombre"));
             inversionista.setApellido(map.get("apellido"));
-            inversionista.setNacionalidad(map.get("dni"));
             inversionista.setIdentificacion(map.get("identificacion"));
             is.setInversionista(inversionista); // Guarda el objeto Inversionista en el servicio
             is.save(); // Llama al método save del servicio
-            res.put("msg", "Inversionista asociado correctamente");
-            return Response.ok(res).build();
+            res.put("msg", "Inversionista guardado");
+            
+            ObjectMapper om = new ObjectMapper();
+            return Response.ok(om.writeValueAsString(res)).build();
         } catch (Exception e) {
             System.out.println("Error: " + e.toString());
             res.put("msg", "ERROR");
@@ -78,4 +83,143 @@ public class InversionistaApi {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
     }
+
+    @Path("/delete/{id}")
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response delete(@PathParam("id") Integer id) { // Extraer el id de la URL {id}
+        HashMap res = new HashMap<>();
+
+        InversionistaServices ps = new InversionistaServices();
+      
+        try {
+            ps.delete(id);
+            res.put("msg", "OK");
+            res.put("status", "Inversionista Eliminado");
+
+            ObjectMapper om = new ObjectMapper();
+            return Response.ok(om.writeValueAsString(res)).build();
+
+        } catch (Exception e) {
+            System.out.println("Error" + e.toString());
+            res.put("msg", "Error");
+            res.put("data", e.toString());
+            return Response.status(Status.BAD_REQUEST).entity(res).build();
+
+        }
+
+    }
+
+    @Path("/update")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(HashMap map) {
+        HashMap res = new HashMap<>();
+
+        System.out.println("ASAS");
+        InversionistaServices ps = new InversionistaServices();
+      
+        try {
+            ps.getInversionista().setId(Integer.parseInt(map.get("id").toString()));
+            ps.getInversionista().setNombre(map.get("nombre").toString());
+            ps.getInversionista().setApellido(map.get("apellido").toString());
+            ps.getInversionista().setIdentificacion(map.get("identificacion").toString());
+
+            ps.update();
+            res.put("msg", "OK");
+            res.put("data", "Inversionista Registarado");
+
+            ObjectMapper om = new ObjectMapper();
+            return Response.ok(om.writeValueAsString(res)).build();
+
+        } catch (Exception e) {
+            System.out.println("Error" + e.toString());
+            res.put("msg", "Error");
+            res.put("data", e.toString());
+            return Response.status(Status.BAD_REQUEST).entity(res).build();
+
+        }
+    }
+
+    @Path("/get/{id}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response get(@PathParam("id") Integer id) {
+        HashMap res = new HashMap<>();
+
+        
+        InversionistaServices ps = new InversionistaServices();
+      
+        try {         
+            res.put("msg", "OK");
+            res.put("data", ps.get(id));
+
+            ObjectMapper om = new ObjectMapper();
+            return Response.ok(om.writeValueAsString(res)).build();
+
+        } catch (Exception e) {
+            System.out.println("Error" + e.toString());
+            res.put("msg", "Error");
+            res.put("data", e.toString());
+            return Response.status(Status.BAD_REQUEST).entity(res).build();
+
+        }
+    }
+
+    @Path("/sort/{attribute}/{orden}/{method}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response get(@PathParam("attribute") String attribute,
+                        @PathParam("orden") Integer orden, 
+                        @PathParam("method") Integer method){
+                        HashMap res = new HashMap<>();
+        InversionistaServices ps = new InversionistaServices();
+      
+        try {         
+            res.put("msg", "OK");
+            res.put("data", ps.order(orden,attribute,method));
+
+            ObjectMapper om = new ObjectMapper();
+            return Response.ok(om.writeValueAsString(res)).build();
+
+        } catch (Exception e) {
+            System.out.println("Error" + e.toString());
+            res.put("msg", "Error");
+            res.put("data", e.toString());
+            return Response.status(Status.BAD_REQUEST).entity(res).build();
+
+        }
+    }
+
+    @Path("/search/{attribute}/{buscar}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response get(@PathParam("attribute") String attribute,
+                        @PathParam("buscar") String valor){
+                        HashMap res = new HashMap<>();
+        InversionistaServices ps = new InversionistaServices();
+      
+        try {         
+            res.put("msg", "OK");
+            res.put("data", ps.buscar(attribute, valor));
+            
+            ObjectMapper om = new ObjectMapper();
+            return Response.ok(om.writeValueAsString(res)).build();
+
+        } catch (Exception e) {
+            System.out.println("Error" + e.toString());
+            res.put("msg", "Error");
+            res.put("data", e.toString());
+            return Response.status(Status.BAD_REQUEST).entity(res).build();
+
+        }
+    }
+    
 }
+
+

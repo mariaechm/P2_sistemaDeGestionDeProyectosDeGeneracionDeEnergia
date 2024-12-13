@@ -11,13 +11,15 @@ package com.example.controller.dao;
 
 import com.example.controller.dao.implement.AdapterDao;
 import com.example.controller.tda.list.LinkedList;
+import com.example.models.Inversionista;
 import com.example.models.Proyecto;
 import com.example.models.enumerator.TipoProyecto;
 
 public class ProyectoDao extends AdapterDao<Proyecto> {
     private Proyecto proyecto;
-    private LinkedList<Proyecto> listAll;
+    private LinkedList listAll;
 
+    // Constructor de la clase que inicializa con DAO
     public ProyectoDao() {
         super(Proyecto.class);
     }
@@ -33,100 +35,53 @@ public class ProyectoDao extends AdapterDao<Proyecto> {
         this.proyecto = proyecto;
     }
 
-    public LinkedList<Proyecto> getListAll() {
+    public LinkedList getListAll() {
         if (listAll == null) {
             this.listAll = listAll();
         }
         return listAll;
     }
 
+    // Guardar un proyecto
     public Boolean save() throws Exception {
-        Integer id = getListAll().getSize() + 1;
-        proyecto.setIdProyecto(id);
+        Integer idProyecto = getListAll().getSize() + 1;
+        proyecto.setId(idProyecto);
         this.persist(this.proyecto);
         this.listAll = listAll();
         return true;
     }
 
-    public Boolean update() throws Exception {
-        this.merge(getProyecto(), getProyecto().getIdProyecto() - 1);
-        this.listAll = listAll();
-        return true;
+    //Obtener ID de un proyecto
+    public Proyecto getById (Integer idProyecto) throws Exception {
+        return this.get(idProyecto);
     }
 
-    public Boolean delete(Integer id) throws Exception {
-        for (int i = 0; i < getListAll().getSize(); i++) {
-            Proyecto pro = getListAll().get(i);
-            if (pro.getIdProyecto().equals(id)) {
-                getListAll().delete(i);
-                return true;
-            }
-        }
-        throw new Exception("No se encontró el proyecto");
+    //Actualizar un proyecto
+    public void update()throws Exception{
+        Integer idProyecto = this.getProyecto().getId();
+        merge(this.proyecto, idProyecto);
     }
 
-    public TipoProyecto getTipoProyecto(String tipo) {
-        return TipoProyecto.valueOf(tipo);
+    //Eliminar un proyecto
+    public void deleteProyecto(Integer idProyecto) throws Exception {
+        delete(idProyecto);
+    
     }
-
-    public TipoProyecto[] getTipos() {
-        return TipoProyecto.values();
-    }
-
-    // Método para ordenar proyectos de acuerdo a un atributo y tipo de orden
-    public LinkedList<Proyecto> order(Integer type_order, String atributo) {
-        LinkedList<Proyecto> listita = listAll();
-        if (!listita.isEmpty()) {
-            Proyecto[] lista = (Proyecto[]) listita.toArray();
-            listita.reset();
-            for (int i = 1; i < lista.length; i++) {
-                Proyecto aux = lista[i]; // valor a ordenar
-                int j = i - 1; // índice anterior
-                while (j >= 0 && (verify(lista[j], aux, type_order, atributo))) {
-                    lista[j + 1] = lista[j--]; // desplaza elementos hacia la derecha
-                }
-                lista[j + 1] = aux; // inserta el valor en su posición correcta
-            }
-
-            // Convertir el array ordenado nuevamente a la lista
-            listita.reset();
-            for (int i = 0; i < lista.length; i++) {
-                listita.add(lista[i]);
-            }
+    public LinkedList order(Integer type_order, String atributo, Integer method) throws Exception{
+        LinkedList listita = listAll();
+        if (method.equals(0)) {
+            listita.quickSort(atributo, type_order);
+        } else if (method.equals(1)) {
+            listita.shellSort(atributo, type_order);
+        } else if (method.equals(2)) {
+            listita.mergeSort(atributo, type_order);
         }
         return listita;
     }
 
-    // Método de comparación 
-    private Boolean verify(Proyecto a, Proyecto b, Integer type_order, String atributo) {
-        if (type_order == 1) { // Orden ascendente
-            if (atributo.equalsIgnoreCase("idProyecto")) {
-                return a.getIdProyecto() > b.getIdProyecto();
-            } else if (atributo.equalsIgnoreCase("nombre")) {
-                return a.getNombre().compareTo(b.getNombre()) > 0;
-            }
-        } else { // Orden descendente
-            if (atributo.equalsIgnoreCase("idProyecto")) {
-                return a.getIdProyecto() < b.getIdProyecto();
-            } else if (atributo.equalsIgnoreCase("nombre")) {
-                return a.getNombre().compareTo(b.getNombre()) < 0;
-            }
-        }
-        return false;
-    }
-
-    public LinkedList<Proyecto> buscarPorNombre(String nombre) {
-        LinkedList<Proyecto> lista = new LinkedList<>();
+    public Proyecto [] buscar (String attribute, String valor) throws Exception{
         LinkedList<Proyecto> listita = listAll();
-        if (!listita.isEmpty()) {
-            Proyecto[] aux = listita.toArray();
-            for (int i = 0; i < aux.length; i++) {
-                if (aux[i].getNombre().toLowerCase().startsWith(nombre.toLowerCase())) {
-                    lista.add(aux[i]);
-                }
-            }
-        }
-        return lista;
+        return listita.busquedaLinealBinaria(attribute, valor).toArray();
     }
 
 }

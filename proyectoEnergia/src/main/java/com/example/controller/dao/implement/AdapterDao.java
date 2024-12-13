@@ -27,7 +27,7 @@ public class AdapterDao<T> implements IntefazDao<T> {
         this.g = new Gson();
     }
 
-    public T get(Integer id) throws Exception {
+   /*  public T get(Integer id) throws Exception {
         LinkedList<T> list = listAll();
         if (!list.isEmpty()) {
             T[] matriz = list.toArray();
@@ -65,6 +65,8 @@ public class AdapterDao<T> implements IntefazDao<T> {
         }
         return -1;
     }
+ */
+
 
     public LinkedList<T> listAll() {
         LinkedList<T> list = new LinkedList<>();
@@ -78,9 +80,9 @@ public class AdapterDao<T> implements IntefazDao<T> {
         return list;
     }
 
-    public void merge(T object, Integer index) throws Exception {
+    public void merge(T object, Integer id) throws Exception {
         LinkedList<T> list = listAll();
-        list.update(object, index);
+        list.update(object, list.getIndice("id", id)); //la funion getindcce devuelve la posisicon del objeto dentro d ela lista
         String info = g.toJson(list.toArray());
         saveFile(info);
     }
@@ -88,6 +90,17 @@ public class AdapterDao<T> implements IntefazDao<T> {
     public void persist(T object) throws Exception {
         LinkedList<T> list = listAll();
         list.add(object);
+        String info = g.toJson(list.toArray());
+        saveFile(info);
+    }
+
+    public T get(Integer id) throws Exception { //BUsqueda bunario d eun solo obejto
+        return listAll().busquedaBinaria("id", id);
+    }
+
+    public void delete(Integer id) throws Exception{
+        LinkedList<T> list = listAll();
+        list.delete(list.getIndice("id", id)); //la funion getindcce devuelve la posisicon del objeto dentro d ela lista DELETE
         String info = g.toJson(list.toArray());
         saveFile(info);
     }

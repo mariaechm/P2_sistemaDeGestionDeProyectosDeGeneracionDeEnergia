@@ -1,20 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package com.example.controller.dao.services;
 
 import com.example.controller.dao.InversionistaDao;
 import com.example.models.Inversionista;
 import com.example.controller.tda.list.LinkedList;
-/**
- *
- * @author maria-chuico
- */
+
+
 public class InversionistaServices {
     private InversionistaDao obj;
-    public InversionistaServices(){
+    public InversionistaServices() {
         obj = new InversionistaDao();
     }
 
@@ -22,10 +15,10 @@ public class InversionistaServices {
         return obj.save();
     }
 
-    public Boolean update() throws Exception {
-        return obj.update();
+    public void update() throws Exception {
+        obj.update();
     }
-    
+
     public LinkedList<Inversionista> listAll(){
         return obj.getListAll();
     }
@@ -34,30 +27,25 @@ public class InversionistaServices {
         return obj.getInversionista();
     }
 
-    public void setInversionista(Inversionista inversionista) {
-        obj.setInversionista(inversionista);
+    public void setInversionista(Inversionista Inversionista) {
+        obj.setInversionista(Inversionista);
     }
 
     public Inversionista get(Integer id) throws Exception {
         return obj.get(id);
     }
 
-    public Boolean delete(Integer id) throws Exception {
-        return obj.delete(id);
-    }
+    public void delete(Integer id) throws Exception {
+        obj.deleteInversionista(id);
+    } 
     
-    public LinkedList order(Integer type_order, String atributo) {
-        return obj.order(type_order, atributo);
+    public LinkedList order(Integer type_order, String atributo, Integer method)  throws Exception{
+        return obj.order(type_order, atributo, method);
     }
 
-    public LinkedList order_object(Integer type, String atributo) throws Exception {
-        return obj.listAll().order(atributo, type);
-    }
-
-    public LinkedList<Inversionista> buscarPorapellido(String texto) {
-        return obj.buscarPorapellido(texto);
-    }
-    public Inversionista buscar_identificacion(String texto) {
-        return obj.buscar_identificacion(texto);
+    public Inversionista[] buscar (String atributo, String valor)  throws Exception{
+        return obj.buscar(atributo, valor);
     }
 }
+
+

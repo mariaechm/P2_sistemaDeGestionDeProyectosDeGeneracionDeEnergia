@@ -5,6 +5,7 @@
 package com.example.controller.dao.services;
 
 import com.example.controller.dao.ProyectoDao;
+import com.example.models.Inversionista;
 import com.example.models.Proyecto;
 import com.example.controller.tda.list.LinkedList;
 
@@ -23,8 +24,8 @@ public class ProyectoServices {
         return obj.save();
     }
 
-    public Boolean update() throws Exception {
-        return obj.update();
+    public void update() throws Exception {
+        obj.update();
     }
 
     public LinkedList<Proyecto> listAll(){
@@ -43,23 +44,16 @@ public class ProyectoServices {
         return obj.get(id);
     }
 
-    public Boolean delete(Integer id) throws Exception {
-        return obj.delete(id);
+    public void delete(Integer id) throws Exception {
+        obj.deleteProyecto(id);
     } 
     
-    public LinkedList order(Integer type_order, String atributo) {
-        return obj.order(type_order, atributo);
+    public LinkedList order(Integer type_order, String atributo, Integer method)  throws Exception{
+        return obj.order(type_order, atributo, method);
     }
 
-    public LinkedList order_object(Integer type, String atributo) throws Exception {
-        return obj.listAll().order(atributo, type);
+    public Proyecto[] buscar (String atributo, String valor)  throws Exception{
+        return obj.buscar(atributo, valor);
     }
-
-    public LinkedList<Proyecto> buscarPorNombre(String texto) {
-        return obj.buscarPorNombre(texto);
-    }
-    /*public Persona buscar_identificacion(String texto) {
-        return obj.buscar_identificacion(texto);
-    }*/
 }
 

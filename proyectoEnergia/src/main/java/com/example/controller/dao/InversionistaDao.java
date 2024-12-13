@@ -4,8 +4,6 @@
  */
 package com.example.controller.dao;
 
-import java.util.function.ToIntBiFunction;
-
 import com.example.controller.dao.implement.AdapterDao;
 import com.example.models.Inversionista;
 import com.example.controller.tda.list.LinkedList;
@@ -16,12 +14,12 @@ import com.example.controller.tda.list.LinkedList;
  */
 public class InversionistaDao extends AdapterDao<Inversionista> {
     private Inversionista inversionista;
-    private LinkedList<Inversionista> listAll;
+    private LinkedList listAll;
 
     public InversionistaDao(){
         super(Inversionista.class);
     }
-    
+    //Constructor de la clase que inicializa con DAO
     public Inversionista getInversionista() {
         if (inversionista == null) {
             inversionista = new Inversionista();
@@ -29,115 +27,60 @@ public class InversionistaDao extends AdapterDao<Inversionista> {
         return this.inversionista;
     }
 
+    //Asigna un objeto Inversionista al atributo interno    
     public void setInversionista(Inversionista inversionista) {
         this.inversionista = inversionista;
     }
 
-    public LinkedList <Inversionista> getListAll() {
+    // Retorna la lista de los inversionistas
+    public LinkedList getListAll() {
         if (listAll == null) {
             this.listAll = listAll();
         }
         return this.listAll;
     }
 
+    //Guardar un inversionista
     public Boolean save() throws Exception{
         Integer id = getListAll().getSize()+1;
-        inversionista.setIdInversionista(id);
+        inversionista.setId(id);
         this.persist(this.inversionista);
         this.listAll = listAll();
         return true;
     }
 
-    public Boolean update() throws Exception{
-        this.merge(getInversionista(), getInversionista().getIdInversionista()-1);
+    //Actualiza Proyecto
+    public Boolean update() throws Exception {
+        this.merge(getInversionista(),getInversionista().getId());
         this.listAll = listAll();
         return true;
     }
 
-    public Boolean delete(Integer id) throws Exception {
-    //Comprobar si existe inversionista
-    for (int i = 0; i < getListAll().getSize(); i++){
-        Inversionista invs = getListAll().get(i);
-        if (inversionista.getIdInversionista().equals(id)){
-            getListAll().delete(i);
-            return true;
-        }
-      }
-    throw new Exception("No existe inversionista");
+    public void deleteInversionista(Integer idInversionista) throws Exception{
+        delete(idInversionista);
     }
 
-        //ordenamiento por insercion
-    public LinkedList order(Integer type_order, String atributo) {
-        LinkedList listita = listAll();
-        if (!listAll().isEmpty()) {
-            Inversionista[] lista = (Inversionista[]) listita.toArray();
-            listita.reset();
-            for (int i = 1; i < lista.length; i++) {
-                Inversionista aux = lista[i]; // valor a ordenar
-                int j = i - 1; // índice anterior
-                while (j >= 0 && (verify(lista[j], aux, type_order, atributo))) {
-                    lista[j + 1] = lista[j--]; // desplaza elementos hacia la derecha
-                }
-                lista[j + 1] = aux; // inserta el valor en su posición correcta
-            }
+    public Inversionista getById(Integer idInversionista) throws Exception{
+        return get(idInversionista);
+    }
+    
 
-            listita.toList(lista);
+        //ordenamiento general
+    public LinkedList order(Integer type_order, String atributo, Integer method) throws Exception{
+        LinkedList listita = listAll();
+        if (method.equals(0)) {
+            listita.quickSort(atributo, type_order);
+        } else if (method.equals(1)) {
+            listita.shellSort(atributo, type_order);
+        } else if (method.equals(2)) {
+            listita.mergeSort(atributo, type_order);
         }
         return listita;
     }
 
-    private Boolean verify(Inversionista a, Inversionista b, Integer type_order, String atributo) {
-        if (type_order == 1) {
-            if (atributo.equalsIgnoreCase("apellido")) {
-                return a.getApellido().compareTo(b.getApellido()) > 0;
-            } else if (atributo.equalsIgnoreCase("nombre")) {
-                return a.getNombre().compareTo(b.getNombre()) > 0;
-            } else if (atributo.equalsIgnoreCase("id")) {
-                return a.getIdInversionista() > b.getIdInversionista();
-            }
-        } else {
-            if (atributo.equalsIgnoreCase("apellido")) {
-                return a.getApellido().compareTo(b.getApellido()) < 0;
-            } else if (atributo.equalsIgnoreCase("nombre")) {
-                return a.getNombre().compareTo(b.getNombre()) < 0;
-            } else if (atributo.equalsIgnoreCase("id")) {
-                return a.getIdInversionista() < b.getIdInversionista();
-            }
-        }
-        return false;
-    }
-
-    public LinkedList<Inversionista> buscarPorapellido(String texto) {
-        LinkedList<Inversionista> lista = new LinkedList<>();
+    //busca por cualquier atributte
+    public Inversionista [] buscar (String attribute, String valor) throws Exception{
         LinkedList<Inversionista> listita = listAll();
-        if (!listita.isEmpty()) {
-            Inversionista[] aux = listita.toArray();
-            for (int i = 0; i < aux.length; i++) {
-
-                if (aux[i].getApellido().toLowerCase().startsWith(texto.toLowerCase())) {
-                    //System.out.println("**** "+aux[i].get);
-                    lista.add(aux[i]);
-                }
-            }
-        }
-        return lista;
+        return listita.busquedaLinealBinaria(attribute, valor).toArray();
     }
-
-    public Inversionista buscar_identificacion(String texto) {
-        Inversionista inversionista = null;
-        LinkedList<Inversionista> listita = listAll();
-        if (!listita.isEmpty()) {
-            Inversionista[] aux = listita.toArray();
-            for (int i = 0; i < aux.length; i++) {
-                if (aux[i].getIdentificacion().equals(texto)) {
-                    //System.out.println("**** "+aux[i].get);
-                    inversionista = aux[i];
-                    break;
-                }
-            }
-        }
-        return inversionista;
-    }
-
-
 }

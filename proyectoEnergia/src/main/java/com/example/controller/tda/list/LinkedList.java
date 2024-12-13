@@ -513,7 +513,7 @@ public class LinkedList<E> {
 }
 
     //Metodo busquedaBinaria
-    private int busquedaBinaria (E elementoArray[],Object x, String attribute) throws Exception {
+    private int busquedaBinaria(E elementoArray[],Object x, String attribute) throws Exception {
         int elementoMenor = 0, elementoMayor = elementoArray.length - 1;
 
         while (elementoMenor <= elementoMayor) {
@@ -537,6 +537,96 @@ public class LinkedList<E> {
             e.printStackTrace();
             throw new Exception("El objeto no se encuentra en la lista");  
         }
+    }
+
+    //-----------------------------------------
+    //Medicion del tiempo
+    public static class _Number {
+        private int value;
+
+        public _Number(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return this.value;
+        }
+
+        @Override
+        public String toString() {
+            return Integer.toString(value);
+        }
+        
+    }
+
+    public static void main(String args) throws Exception {
+        LinkedList<_Number> list1 = new LinkedList();
+        LinkedList<_Number> list2 = new LinkedList();
+
+        final Integer size = 1000;
+        _Number[] numeros = new _Number[size];
+        for(int i = 0; i < size; i++) {
+            numeros[i] = new _Number(i+1);
+        }
+
+        list1.toList(numeros);
+        list2.toList(numeros);
+
+        long time1b = System.currentTimeMillis();
+        System.out.println(list1.busquedaBinaria("value",1));
+        long time2b = System.currentTimeMillis();
+
+        long time1bl = System.currentTimeMillis();
+        System.out.println(list1.busquedaLinealBinaria("value",1));
+        long time2bl = System.currentTimeMillis();
+
+        Long timeBS = time2b - time1b;
+        Long timeBLS = time2bl - time1bl;
+        
+        System.out.println("==========================================================");
+        System.out.println("Tiempo de ejecución Quick Sort: " + timeBS + "ms");
+        System.out.println("Tiempo de ejecución Merge Sort: " + timeBLS + "ms");
+
+    }
+
+    public static void main(String... args) throws Exception {
+        LinkedList<_Number> list1 = new LinkedList();
+        LinkedList<_Number> list2 = new LinkedList();
+        LinkedList<_Number> list3 = new LinkedList();
+
+        final Integer size = 1000;
+        _Number[] numeros = new _Number[size];
+        for(int i = 0; i < size; i++) {
+            Integer rand = (int)Math.round(Math.random()*1000);
+            numeros[i] = new _Number(rand);
+        }
+
+        list1.toList(numeros);
+        list2.toList(numeros);
+        list3.toList(numeros);
+
+        long time1q = System.currentTimeMillis();
+        System.out.println(list1.quickSort("value",1));
+        long time2q = System.currentTimeMillis();
+
+        long time1m = System.currentTimeMillis();
+        System.out.println(list1.mergeSort("value",1));
+        long time2m = System.currentTimeMillis();
+
+        long time1s = System.currentTimeMillis();
+        System.out.println(list1.shellSort("value",1));
+        long time2s = System.currentTimeMillis();
+
+        Long timeQ = time2q - time1q;
+        Long timeM = time2m - time1m;
+        Long timeS = time2s - time1s;
+
+        System.out.println("==========================================================");
+        System.out.println("Tiempo de ejecución Quick Sort: " + timeQ + "ms");
+        System.out.println("Tiempo de ejecución Merge Sort: " + timeM + "ms");
+        System.out.println("Tiempo de ejecución Shell Sort: " + timeS + "ms");
+
+
     }
 
 }

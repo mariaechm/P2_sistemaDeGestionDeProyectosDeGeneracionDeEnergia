@@ -100,6 +100,7 @@ import com.google.gson.reflect.TypeToken;
              ps.delete(id);
              res.put("msg", "OK");
              res.put("status", "Proyecto Eliminado");
+             
              ObjectMapper om = new ObjectMapper();
              return Response.ok(om.writeValueAsString(res)).build();
  
